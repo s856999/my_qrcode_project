@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}下單成功{% endblock %}
+{% block main %}
+<div class="text-center mt-5">
+  <h2>感謝您的訂購！</h2>
+  <h3>您的取餐號碼是：</h3>
+  <div class="display-4 text-primary">{{ pickup_number }}</div>
+  <p>請用手機截圖，並記下您的號碼~等待叫號</p>
+</div>
+{% endblock %}

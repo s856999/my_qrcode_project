@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+{% block title %}訂單列表{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+  <h2 class="text-center mb-5 fw-bold text-dark">📋 訂單列表</h2>
+
+  <div class="row g-4">
+    <!-- 內用區 -->
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white text-center fw-bold fs-5 rounded-top">
+          內用訂單
+        </div>
+        <div class="card-body" id="accordionDineIn"></div>
+      </div>
+    </div>
+
+    <!-- 外帶區 -->
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white text-center fw-bold fs-5 rounded-top">
+          外帶訂單
+        </div>
+        <div class="card-body" id="accordionTakeOut"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentOrders = [];
+let accordionState = {}; // 記錄手風琴展開狀態
+
+// 建立訂單 HTML
+function renderOrders(orders) {
+  const dineInContainer = document.getElementById("accordionDineIn");
+  const takeOutContainer = document.getElementById("accordionTakeOut");
+  dineInContainer.innerHTML = "";
+  takeOutContainer.innerHTML = "";
+
+  // 按 int_out 分類
+  const grouped = {};
+  orders.forEach(o => {
+    if (!grouped[o.int_out]) grouped[o.int_out] = {};
+    if (!grouped[o.int_out][o.number]) grouped[o.int_out][o.number] = [];
+    grouped[o.int_out][o.number].push(o);
+  });
+
+  for (const [intOut, numbers] of Object.entries(grouped)) {
+    for (const [number, items] of Object.entries(numbers)) {
+      const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+      const orderId = `${intOut}-${number}`;
+      const isOpen = accordionState[orderId] || false;
+
+      const itemHTML = `
+        <div class="accordion-item mb-3 border rounded shadow-sm">
+          <h2 class="accordion-header" id="heading${orderId}">
+            <button class="accordion-button ${isOpen ? '' : 'collapsed'} fw-bold bg-light" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapse${orderId}"
+                    aria-expanded="${isOpen}" aria-controls="collapse${orderId}">
+              <i class="bi bi-receipt me-2 text-primary"></i>#${number} 號訂單
+            </button>
+          </h2>
+          <div id="collapse${orderId}" class="accordion-collapse collapse ${isOpen ? 'show' : ''}"
+               aria-labelledby="heading${orderId}">
+            <div class="accordion-body bg-white">
+              <table class="table table-sm align-middle text-center mb-3">
+                <thead class="table-light">
+                  <tr>
+                    <th>品項</th>
+                    <th>數量</th>
+                    <th>備註</th>
+                    <th>小計</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${items.map(i => `
+                    <tr>
+                      <td class="text-start">${i.name}</td>
+                      <td>x${i.quantity}</td>
+                      <td>${i.remark || '-'}</td>
+                      <td class="text-end">$${i.price * i.quantity}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="fw-bold fs-5 text-danger">
+                  總金額：$${total}
+                </div>
+              </div>
+
+              <div class="mt-3 text-end">
+                <form action="/finish_order/${number}" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-success btn-sm px-3"
+                          onclick="return confirm('確認此訂單已完成嗎？');">
+                    ✅ 完成
+                  </button>
+                </form>
+                <form action="/delete_orders/${number}" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm px-3 ms-2"
+                          onclick="return confirm('確定要刪除嗎？');">
+                    🗑 刪除
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const target = intOut === "內用" ? dineInContainer : takeOutContainer;
+      target.insertAdjacentHTML("beforeend", itemHTML);
+    }
+  }
+
+  // 綁定開關事件
+  document.querySelectorAll(".accordion-button").forEach(btn => {
+    const id = btn.getAttribute("data-bs-target").replace("#collapse", "");
+    btn.addEventListener("click", () => {
+      accordionState[id] = !accordionState[id];
+    });
+  });
+}
+
+// 載入訂單資料
+function loadOrders() {
+  fetch("/get_orders_json")
+    .then(r => r.json())
+    .then(data => {
+      if (JSON.stringify(data) !== JSON.stringify(currentOrders)) {
+        console.log("🔄 訂單更新中...");
+        currentOrders = data;
+        renderOrders(data);
+      }
+    })
+    .catch(err => console.error("載入錯誤:", err));
+}
+
+// 初始化
+loadOrders();
+setInterval(loadOrders, 5000); // 每5秒刷新
+</script>
+{% endblock %}

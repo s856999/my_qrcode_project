@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+注冊
+{% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <form action="/register" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="賬號"
+                type="text">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="email" placeholder="信箱"
+                type="email">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="restaurant_name" placeholder="餐廳名稱"
+                type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="password" placeholder="密碼" type="password">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="again_password" placeholder="再次輸入密碼" type="password">
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">確認注冊</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

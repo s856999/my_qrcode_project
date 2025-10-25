@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}QrCode{% endblock %}
+
+{% block main %}
+<!-- 使用 Bootstrap 的 vh-100 讓 div 佔滿整個視窗高度 -->
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <!-- 餐廳名稱 -->
+        <h1 class="mb-4">{{ restaurant.restaurant_name }}</h1>
+        <!-- 卡片容器 -->
+        <div class="card mx-auto" style="max-width: 90vw;">
+            <img src="{{ url_for('static', filename=restaurant.qrcode) }}" class="img-fluid" alt="QrCode">
+        </div>
+    </div>
+</div>
+{% endblock %}

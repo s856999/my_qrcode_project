@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}
+登入
+{% endblock %}
+
+{% block main %}
+{% if not session["user_id"] %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <form action="/login" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="賬號"
+                type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="password" placeholder="密碼" type="password">
+        </div>
+        
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">登入</button>
+            
+            <a href="/register" class="btn btn-secondary ms-2">註冊</a>    
+        </div>
+        
+    </form>
+</div>
+{% endif %}
+{% endblock %}

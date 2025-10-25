@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}編輯菜單{% endblock %}
+
+{% block main %}
+<h2>編輯菜單項目</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label>名稱：</label>
+        <input type="text" name="name" class="form-control" value="{{ item.name }}">
+    </div>
+
+    <div class="mb-3">
+        <label>價格：</label>
+        <input type="number" name="price" class="form-control" value="{{ item.price }}">
+    </div>
+
+    <div class="mb-3">
+        <label>分類：</label>
+        <input type="text" name="category" class="form-control" value="{{ item.category }}">
+    </div>
+
+    <div class="mb-3">
+        <label>狀態：</label>
+        <select name="available" class="form-select">
+            <option value="true" {% if item.available %}selected{% endif %}>上架中</option>
+            <option value="false" {% if not item.available %}selected{% endif %}>下架</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">儲存修改</button>
+    <a href="{{ url_for('menu_bp.menu_page') }}" class="btn btn-secondary">取消</a>
+</form>
+{% endblock %}

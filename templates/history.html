@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block title %}歷史交易紀錄{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+  <h2 class="text-center text-primary mb-4 fw-bold">📜 歷史交易紀錄</h2>
+
+  <!-- 今日營業摘要 -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body text-center">
+      <h4 class="text-success mb-3">💰 今日營業額：{{ today_revenue }} 元</h4>
+
+      {% if today_sales %}
+      <h5 class="text-secondary mb-2">🍱 今日銷售統計：</h5>
+      <ul class="list-group list-group-flush w-50 mx-auto">
+        {% for s in today_sales %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span>{{ s.name }}</span>
+          <span class="badge bg-primary rounded-pill">{{ s.total_sold }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-muted">今日尚無銷售紀錄。</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 歷史訂單 -->
+  {% if finish_orders %}
+  <div class="accordion" id="finishAccordion">
+    {% for group in finish_orders | groupby("order_date") %}
+      <h4 class="mt-4 text-center text-info">📅 {{ group.grouper }}</h4>
+
+      {% for o in group.list | groupby("number") %}
+      <div class="accordion-item mb-2 shadow-sm">
+        <h2 class="accordion-header" id="heading{{ group.grouper }}_{{ loop.index }}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapse{{ group.grouper }}_{{ o.grouper }}" aria-expanded="false"
+            aria-controls="collapse{{ group.grouper }}_{{ o.grouper }}">
+            <strong>訂單 #{{ o.grouper }}</strong> ｜ 完成時間：{{ o.list[0].finish_time.strftime("%Y-%m-%d %H:%M") }}
+          </button>
+        </h2>
+        <div id="collapse{{ group.grouper }}_{{ o.grouper }}" class="accordion-collapse collapse"
+          aria-labelledby="heading{{ group.grouper }}_{{ o.grouper }}" data-bs-parent="#finishAccordion">
+          <div class="accordion-body">
+            <ul class="list-group">
+              {% for item in o.list %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ item.name }}</strong>
+                  <small class="text-muted ms-2">({{ item.int_out }})</small><br>
+                  <small>備註：{{ item.remark or '-' }}</small>
+                </div>
+                <span class="text-end">
+                  x{{ item.quantity }}<br>
+                  {{ item.price * item.quantity }} 元
+                </span>
+              </li>
+              {% endfor %}
+            </ul>
+            <small class="text-muted">下單時間：{{ o.list[0].first_time.strftime("%Y-%m-%d %H:%M") }}</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-info text-center">目前沒有歷史訂單。</div>
+  {% endif %}
+
+  <!-- 清空歷史交易 -->
+  <div class="text-center mt-5 mb-4">
+    <form action="{{ url_for('menu_bp.clear_history') }}" method="POST"
+            onsubmit="return confirm('確定要清空所有歷史交易，並重置號碼牌嗎？');">
+      <button type="submit" class="btn btn-danger btn-lg shadow">
+        🗑 清空歷史交易(可以重置號碼牌)
+      </button>
+    </form>
+    <button type="button" class="btn btn-warning btn-lg shadow" onclick="exportAndRefresh()">
+    📤 匯出報表並清空歷史交易(可以重置號碼牌)
+    </button>
+  </div>
+    <script>
+        function exportAndRefresh() {
+            if (!confirm('確定要匯出，並清空所有歷史交易及重置號碼牌嗎？嗎？')) return;
+
+            // 建立隱藏 iframe 下載 CSV（避免阻塞頁面）
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = '/export_and_clear_history';  // 路徑改成你後端對應的 route
+            document.body.appendChild(iframe);
+
+            // 等待 2 秒後自動刷新頁面
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+    </script>
+</div>
+{% endblock %}

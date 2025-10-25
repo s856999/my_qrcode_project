@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+關於 James QRcode
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-5">
+      <h1 class="text-center mb-4 fw-bold text-primary">嗨你好，這裡是 <span class="text-success">James QRcode</span></h1>
+      <p class="lead text-center mb-5">一個 <strong class="text-danger">免費的 QRcode 菜單網站</strong></p>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <p class="mb-3">註冊後你會得到一個專屬的 QRcode，提供給顧客掃描後即可進行線上點餐。</p>
+          <p class="mb-3">顧客會看到你設定好的菜單，選擇 <strong>內用</strong> 或 <strong>外帶</strong>，對喜愛的餐點調整數量並可加上備註。</p>
+          <p class="mb-3">送出菜單後，顧客會獲得一組 <strong>取餐號碼</strong>，作為待會取餐時的編號。</p>
+
+          <hr class="my-4">
+
+          <h4 class="fw-bold text-secondary mb-3">🍴 餐廳端功能</h4>
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">可上傳餐點圖片，設定名稱、價格、分類。</li>
+            <li class="list-group-item">能隨時上架或下架餐點。</li>
+            <li class="list-group-item">擁有訂單列表，方便查看與管理現有訂單，可設定完成或刪除。</li>
+            <li class="list-group-item">若不使用 QRcode，也有「<strong>服務員點餐區</strong>」可面對顧客直接點餐。</li>
+          </ul>
+
+          <hr class="my-4">
+
+          <h4 class="fw-bold text-secondary mb-3">📊 歷史訂單與報表</h4>
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">可查看已完成訂單記錄、今日營業額與銷售統計。</li>
+            <li class="list-group-item">可選擇 <strong>匯出報表</strong>（EXCEL 格式）或 <strong>清空歷史交易</strong>。</li>
+            <li class="list-group-item text-danger">清空或匯出後，系統會同時幫你 <strong>重置號碼牌</strong>，記得善加利用！</li>
+          </ul>
+
+          <div class="alert alert-info mt-4 text-center rounded-4">
+            <p class="mb-1 fw-semibold">✨ 最後，希望這個網站能讓你的點餐流程更輕鬆。</p>
+            <p class="mb-0">我是 <strong>James</strong>，感謝使用 <span class="text-success">James QRcode</span>！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
