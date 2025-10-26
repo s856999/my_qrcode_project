@@ -6,3 +6,4 @@ qrcode[pil]>=7.3
 Flask-Mail>=0.9.1
 python-dotenv>=1.0.0
 Werkzeug>=2.3.0
+gunicorn
