@@ -162,7 +162,8 @@ def register():
                 # 生成 QR code 檔案路徑
                 qrcode_filename = f"{unique_id}.png"
                 qrcode_path = os.path.join(UPLOAD_FOLDER, qrcode_filename)
-                generate_qrcode(f"http://127.0.0.1:5000/menu/{unique_id}", qrcode_path)
+                generate_qrcode(f"jamesqrcode.onrender.com/menu/{unique_id}", qrcode_path)
+                # 本地方式 generate_qrcode(f"http://127.0.0.1:5000/menu/{unique_id}", qrcode_path)
 
                 # 存資料庫時只存相對於 static 的路徑
                 qrcode_db_path = f"qrcodes/{qrcode_filename}"
