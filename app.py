@@ -177,9 +177,12 @@ def register():
 
             # 寄出驗證信
             verify_url = url_for("verify_email", token=token, _external=True)
-            msg = Message("請驗證您的信箱", recipients=[email])
-            msg.body = f"您好！請點擊以下連結完成信箱驗證：\n{verify_url}"
-            mail.send(msg)
+            print("模擬寄信 → 收件者:", email)
+            print("驗證連結:", verify_url)
+            # 原本的寄信程式碼暫時註解掉
+            # msg = Message("請驗證您的信箱", recipients=[email])
+            # msg.body = f"您好！請點擊以下連結完成信箱驗證：\n{verify_url}"
+            # mail.send(msg)
 
             flash("註冊成功！請前往信箱點擊驗證連結。")
             return redirect("/login")
